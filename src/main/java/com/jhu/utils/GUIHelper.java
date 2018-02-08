@@ -14,6 +14,9 @@ import javax.swing.JLabel;
 
 import com.jhu.azureapi.ApiUtil;
 
+/*
+ * Just a simple GUI helper class to quick display image. 
+ */
 public class GUIHelper {
 
 	public static void displayImage(String imageUrlOrFileName) {
@@ -44,6 +47,7 @@ public class GUIHelper {
 			JFrame jFrame = new JFrame();
 			jFrame.setLayout(new FlowLayout());
 			jFrame.setSize(w, h);
+			//Do random start location to avoid all images displayed in same location. 
 			jFrame.setLocation((int) (Math.random() * 300), (int) (Math.random() * 300));
 
 			jFrame.add(jLabel);

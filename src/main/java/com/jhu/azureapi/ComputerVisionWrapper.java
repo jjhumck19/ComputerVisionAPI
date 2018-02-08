@@ -21,10 +21,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-public class ComputerVisionWraper {
+/**
+ * Azure computer vision wrapper.  
+ * Provide direct image analyze methods and hiding http post get related work from user
+ * 
+ * @author James Hu
+ *
+ */
+public class ComputerVisionWrapper {
 	private ComputerVisionAPI api;
 
-	public ComputerVisionWraper(ComputerVisionAPI api) {
+	public ComputerVisionWrapper(ComputerVisionAPI api) {
 		this.api = api;
 	}
 	
@@ -32,23 +39,26 @@ public class ComputerVisionWraper {
 		return api;
 	}
 
-	/**
-	 * Analyze a image from web image URL.
-	 * 
-	 * @param imageUrlOrFileName
-	 *            image url for
-	 * @return analyze result in JSONObject
+	/*
+	 * analyze image with all features and all details 
 	 */
 	public JSONObject analyzeImage(String imageUrlOrFileName) {
+		return analyzeImage(imageUrlOrFileName, ComputerVisionAPI.ALLFEATURES, ComputerVisionAPI.ALLDETAILS);
+	}
+	
+	/*
+	 * analyze image with given features and details
+	 */
+	public JSONObject analyzeImage(String imageUrlOrFileName, List<String> features, List<String> details) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
 
 		try {
 			// azure API URL 
 			URIBuilder builder = new URIBuilder(api.getAnalyzeURL());
-
+			
 			// add parameters
-			addParameters(builder, ComputerVisionAPI.ALLFEATURES, ComputerVisionAPI.ALLDETAILS);
+			addParameters(builder, features, details);
 			builder.setParameter("language", "en");
 
 			// Prepare the URI for the REST API call.
@@ -65,15 +75,23 @@ public class ComputerVisionWraper {
 
 		} catch (Exception e) {
 			// Display error message.
+			// TODO better handle exception
 			System.out.println(e.getMessage());
 		}
 
 		return json;
 	}
+	
+	/**
+	 * Description image with max candidates 1
+	 */
 	public JSONObject describeImage(String imageUrlOrFileName) {
 		return describeImage(imageUrlOrFileName, 1);
 	}
 	
+	/**
+	 * Description image with given max candidates 
+	 */
 	public JSONObject describeImage(String imageUrlOrFileName,int maxCandidates) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
@@ -104,9 +122,9 @@ public class ComputerVisionWraper {
 		return json;
 	}
 
-	/*
-	 * Analyze local an image file (Supported image file like JPEG, PNG
-	 */
+	/**
+	 * Analyze local an image file (Supported image file like JPEG, PNG, GIF, BMP)
+	 **/
 	public JSONObject analyzeImage(File localImageFile) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
@@ -142,6 +160,10 @@ public class ComputerVisionWraper {
 		return json;
 	}
 
+	/**
+	 * Analyze image based on the domain model. DomainModel.LANDMARKS or DomainModel.CELEBRITIES
+	 * 
+	 */
 	public JSONObject analyzeDomainModel(String imageUrl, DomainModel model) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
@@ -168,10 +190,17 @@ public class ComputerVisionWraper {
 		return json;
 	}
 
+	/**
+	 * generate thumbnail for given image with default size 100, 100 and smartCropping
+	 */
 	public InputStream generateThumbnail(String imageUrl) {
 		return generateThumbnail(imageUrl, 100, 100, true);
 	}
 
+	/**
+	 * generate thumbnail for given image with user provide size and smartCropping flag.
+	 * 
+	 */
 	public InputStream generateThumbnail(String imageUrl, int width, int height, boolean smartCropping) {
 		HttpClient httpclient = HttpClients.createDefault();
 		InputStream thumbnailInputStream = null;
@@ -192,8 +221,8 @@ public class ComputerVisionWraper {
 			HttpEntity entity = response.getEntity();
 
 			if (response.getStatusLine().getStatusCode() == 200) {
-				// Display the thumbnail.
 				thumbnailInputStream = entity.getContent();
+				// Display the thumbnail. Comment out. Just return here let caller to handle display.
 				// displayImage(entity.getContent());
 			} else {
 				// Format and display the JSON error message.
@@ -215,10 +244,18 @@ public class ComputerVisionWraper {
 		return thumbnailInputStream;
 	}
 
+	/**
+	 * OCR on an image with default auto language detection and detect Orientation is true
+	 * 
+	 */
 	public JSONObject ocrImage(String imageUrl) {
 		return ocrImage(imageUrl, "unk", true);
 	}
 
+	/**
+	 * OCR on an image with user provided language and detectOrientation flag
+	 * 
+	 */
 	public JSONObject ocrImage(String imageUrl, String language, boolean detectOrientation) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
@@ -245,6 +282,12 @@ public class ComputerVisionWraper {
 		return json;
 	}
 
+	/**
+	 * Recognize the hand writing text
+	 * 
+	 * @param imageUrl
+	 * @return
+	 */
 	public JSONObject recognizeText(String imageUrl) {
 		JSONObject json = null;
 		try {
@@ -299,28 +342,25 @@ public class ComputerVisionWraper {
 		return json;
 	}
 	
+	/**
+	 * Get supported models 
+	 * @return
+	 */
 	public JSONObject getModels() {
-		HttpClient httpclient = HttpClients.createDefault();
-		JSONObject json = null;
-
-		try {
-			HttpGet resultRequest = new HttpGet(api.getModelsURL());
-			resultRequest.setHeader("Ocp-Apim-Subscription-Key", api.getSubscriptionKey());
-
-			HttpResponse resultResponse = httpclient.execute(resultRequest);
-			HttpEntity responseEntity = resultResponse.getEntity();
-
-			json = handleResponseDefault(responseEntity, null);
-
-		} catch (Exception e) {
-			// Display error message.
-			System.out.println(e.getMessage());
-		}
-		return json;
-
+		return get(api.getModelsURL());
 	}
 	
-	public JSONObject getTextOperations(String url) {
+	/**
+	 * Get text operations result from result url
+	 */
+	public JSONObject getTextOperations(String resultUrl) {
+			return get(resultUrl);
+	}
+	
+	/**
+	 * Comment get method
+	 */
+	public JSONObject get(String url) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
 
@@ -341,6 +381,12 @@ public class ComputerVisionWraper {
 
 	}
 	
+	/**
+	 * Get image tag
+	 * 
+	 * @param imageUrlOrFileName
+	 * @return
+	 */
 	public JSONObject tagImage(String imageUrlOrFileName) {
 		HttpClient httpclient = HttpClients.createDefault();
 		JSONObject json = null;
@@ -369,12 +415,14 @@ public class ComputerVisionWraper {
 		return json;
 	}
 	
+	//Helper methods 
 	private HttpPost buildPostRequest(URI uri, String imageUrlOrFileName) throws Exception {
-		return buildPostRequest(uri, imageUrlOrFileName, false);  //default for file not user multipart/form-data but use  application/octet-stream 
+		return buildPostRequest(uri, imageUrlOrFileName, false);  //default. For file not use multipart/form-data but use  application/octet-stream 
 	}
 
-	// if imageURL is http url application/json
-	// if local file application/octet-stream or multipart/form-data
+	// if imageUrlOrFileName is http url the application/json
+	// if imageUrlOrFileName local file  the application/octet-stream  if useMultipart flag is not true
+	// Use multipart/form-data for local file if usNultipart flag is true
 	private HttpPost buildPostRequest(URI uri, String imageUrlOrFileName, boolean useMultipart) throws Exception {
 		HttpPost request = new HttpPost(uri);
 
@@ -406,7 +454,6 @@ public class ComputerVisionWraper {
 		}
 		return request;
 	}
-	
 	
 	private JSONObject handleResponseDefault(HttpEntity entity, String sourceLocation) throws Exception {
 		JSONObject json = null;

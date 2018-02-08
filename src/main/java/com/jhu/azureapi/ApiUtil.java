@@ -1,8 +1,12 @@
 package com.jhu.azureapi;
 
+/**
+ * Api Util provide quick static methods for API related data checking and helper methods.
+ * @author James Hu
+ *
+ */
 public final class ApiUtil {
 	private ApiUtil() {
-		
 	}
 	
 	public static  boolean isHttpUrl(String url) {

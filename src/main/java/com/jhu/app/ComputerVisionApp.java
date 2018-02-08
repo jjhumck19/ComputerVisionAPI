@@ -1,5 +1,8 @@
 package com.jhu.app;
 
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -35,11 +40,11 @@ import org.json.JSONObject;
 
 import com.jhu.azureapi.ApiUtil;
 import com.jhu.azureapi.ComputerVisionAPI;
-import com.jhu.azureapi.ComputerVisionWraper;
+import com.jhu.azureapi.ComputerVisionWrapper;
 import com.jhu.azureapi.DomainModel;
 
 
-public class ComputerVisionApp extends javax.swing.JFrame {
+public class ComputerVisionApp extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -56,13 +61,13 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         tabbedPane = new JTabbedPane();
         analyzePanel = new JPanel();
         titleLabel = new JLabel();
-        apiComboBox = new JComboBox<String>();
+        apiComboBox = new JComboBox<>();
         
         instructionLabel = new JLabel();
         
         imagePromptLabel = new JLabel();
         imageURLTextField = new JTextField();
-        fileBrowseButton = new javax.swing.JButton();
+        fileBrowseButton = new JButton();
         analyzeImageButton = new JButton();
         
         responseLabel = new JLabel();
@@ -75,14 +80,13 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         thumbnailImage = new JLabel();
         
         captionLabel = new JLabel();
+        
         sKeyLabel = new JLabel();
         sKeyTextField = new JTextField();
         sRegionLabel = new JLabel();
-        sRegionComboBox = new JComboBox<String>();
+        sRegionComboBox = new JComboBox<>();
         setSubscriptionButton = new JButton();
         resetDefaultButton = new JButton("Reset Default");
-        
-    
         
         jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         jfc.setDialogTitle("Select an image");
@@ -90,21 +94,18 @@ public class ComputerVisionApp extends javax.swing.JFrame {
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Supported images","jpg","png", "gif","bmp","jpeg");
 		jfc.addChoosableFileFilter(filter);
 
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(980, 640));
-
-        titleLabel.setFont(new java.awt.Font("Tahoma", 1, 14));
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(980, 640));
+    
+        titleLabel.setFont(new Font("Arial", 1, 16));
         titleLabel.setText("Computer Vision API:");
 
         instructionLabel.setText("Enter the URL or a file to an image, then click the \"Analyze Image\" button. ");
 
         imagePromptLabel.setText("Image URL or File:");
-        analyzeImageButton.setText("Analyze Image");
-        
         fileBrowseButton.setText("Browse");
+        analyzeImageButton.setText("Analyze Image");
       
-        
         responseLabel.setText("Response:");
         sourceImageLabel.setText("Source image:");
 
@@ -115,8 +116,7 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         
         thumbnailLabel.setText("Thumbnail:");
 
-        apiComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "analyze", "landmarks", "celebrities", "tag", "ocr", "thumbnail", "recognize" }));
-
+        apiComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "analyze", "landmarks", "celebrities", "tag", "ocr", "thumbnail", "recognize" }));
 
         //UI Layout
 		GroupLayout analyzePanelLayout = new GroupLayout(analyzePanel);
@@ -136,7 +136,7 @@ public class ComputerVisionApp extends javax.swing.JFrame {
 										        .addComponent(captionLabel, GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 								.addGroup(analyzePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 												.addComponent(thumbnailLabel)
-										        .addComponent(thumbnailImage, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
+										        .addComponent(thumbnailImage, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(analyzePanelLayout.createSequentialGroup()
 								.addGroup(analyzePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 								.addGroup(analyzePanelLayout.createSequentialGroup()
@@ -232,20 +232,20 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         pack();
         
         // Add all actions here
-        this.imageURLTextField.addActionListener(new ActionListener() {
-        	 public void actionPerformed(java.awt.event.ActionEvent evt) {
+        imageURLTextField.addActionListener(new ActionListener() {
+        	 public void actionPerformed(ActionEvent evt) {
      			displayImage(imageURLTextField.getText());
              }
         });
+        
         analyzeImageButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
             	analyzeButtonActionPerformed(evt);
             }
         });
         
-
-        fileBrowseButton.addActionListener(new java.awt.event.ActionListener() {
-        	public void actionPerformed(java.awt.event.ActionEvent evt) {
+        fileBrowseButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent evt) {
         		if (ifcLastPath != null) {
         			jfc.setCurrentDirectory(ifcLastPath);
         		}
@@ -261,20 +261,20 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         });
         
         setSubscriptionButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
             	setSubscription(evt);
             }
         });
         
         resetDefaultButton.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
             	resetDefault(evt);
             }
         });
     }
 
   
-    private void analyzeButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void analyzeButtonActionPerformed(ActionEvent evt) {
     	String selectedAPI = (String)apiComboBox.getSelectedItem();
     	switch (selectedAPI) {
 		case "analyze":
@@ -376,7 +376,6 @@ public class ComputerVisionApp extends javax.swing.JFrame {
            }
            // Format and display the JSON response.
            responseTextArea.setText(jsonObj.toString(2));
-           
            captionLabel.setText(getCaptionText(jsonObj,"result","landmarks", "name"));
 
       }
@@ -423,7 +422,7 @@ public class ComputerVisionApp extends javax.swing.JFrame {
 
         // Format and display the JSON response.
         responseTextArea.setText(jsonObj.toString(2));
-        captionLabel.setText(getCaptionText(jsonObj,"tags", "name"));
+        captionLabel.setText(getCaptionText(jsonObj, "tags", "name"));
   }
     
     private void ocrImage() {
@@ -503,7 +502,6 @@ public class ComputerVisionApp extends javax.swing.JFrame {
 			}
 		}
 		return captionText;
-
 	}
     
     
@@ -599,7 +597,7 @@ public class ComputerVisionApp extends javax.swing.JFrame {
         }
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ComputerVisionApp().setVisible(true);
             }
@@ -607,7 +605,7 @@ public class ComputerVisionApp extends javax.swing.JFrame {
     }
 
     //API using default
-    private ComputerVisionWraper api = new  ComputerVisionWraper( new ComputerVisionAPI()) ;
+    private ComputerVisionWrapper api = new  ComputerVisionWrapper( new ComputerVisionAPI()) ;
     
     //UI components 
     private JLabel captionLabel;
