@@ -183,13 +183,14 @@ public class ComputerVisionApp extends JFrame {
 								.addComponent(thumbnailImage,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
 						.addContainerGap()));
 
-		tabbedPane.addTab("Analyze", analyzePanel);
+		tabbedPane.addTab("Image Analyze", analyzePanel);
 
         sKeyLabel.setText("Subscription Key:");
         sKeyTextField.setText("Copy/paste your subscription key here.");
         sRegionLabel.setText("Subscription Region:");
         sRegionComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "eastus", "eastus2", "westcentralus", "westus","westus2", "westeurope", "southeastasia" }));
         setSubscriptionButton.setText("Set Subscription");
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -320,7 +321,8 @@ public class ComputerVisionApp extends JFrame {
     private void resetDefault(ActionEvent evt) {
     	ComputerVisionAPI origAPI = api.getApi();
     	origAPI.reset();
-    	this.sKeyTextField.setText(origAPI.getSubscriptionKey());
+    	sKeyTextField.setText(origAPI.getSubscriptionKey());
+    	sRegionComboBox.setSelectedItem(origAPI.getRegion());
     }
     
     private void analyzeImage() {

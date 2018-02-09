@@ -36,6 +36,7 @@ public class ComputerVisionAPI {
 		SUPPORT_REGIONS.add("westus");
 		SUPPORT_REGIONS.add("eastus2");
 		SUPPORT_REGIONS.add("westus2");
+		SUPPORT_REGIONS.add("westcentralus");
 		SUPPORT_REGIONS.add("southcentralus");
 		SUPPORT_REGIONS.add("westeurope");
 		SUPPORT_REGIONS.add("northeurope");
@@ -119,7 +120,16 @@ public class ComputerVisionAPI {
 			int start = uriBase.indexOf("//") + 2;
 			int end = uriBase.indexOf(".");
 			uriBase = uriBase.substring(0, start) + region + uriBase.substring(end);
+		} else {
+			System.out.println("Not supported regon: " + region);
 		}
+	}
+	
+	public String getRegion() {
+			int start = uriBase.indexOf("//") + 2;
+			int end = uriBase.indexOf(".");
+			String region = uriBase.substring(start,end);
+		return region;
 	}
 
 	public void reset() {

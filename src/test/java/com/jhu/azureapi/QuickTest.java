@@ -189,6 +189,14 @@ public class QuickTest {
 		System.out.println("######uriBase: " + api.getUriBase());
 	}
 	
+	public void testGetRegion() {
+		ComputerVisionAPI api = new ComputerVisionAPI();
+		System.out.println("######region: " + api.getRegion());
+		
+		api.changeRegion("westcentralus");
+		System.out.println("######region: " + api.getRegion());
+	}
+	
 	public void showResult(JSONObject json) {
 		System.out.println(json.toString(2));
 	}
@@ -208,11 +216,12 @@ public class QuickTest {
 //			test.testChangeRegion();
 //			test.testTag();
 //			test.testDescribeImage();
-			test.testGetModles();
+//			test.testGetModles();
 			
 //			test.testGetProperties();
 			
 //			test.testInitConfig();
+			test.testGetRegion();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
