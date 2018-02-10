@@ -113,7 +113,7 @@ public class ComputerVisionAPI {
 		this.uriBase = uriBase;
 	}
 
-	//Other methods
+	//Other methods. Change based url based on the given region. 
 	public void changeRegion(String region) {
 		if (isSupporttedRegion(region)) {
 			int start = uriBase.indexOf("//") + 2;
@@ -131,7 +131,7 @@ public class ComputerVisionAPI {
 		return SUPPORT_REGIONS.contains(region);
 	}
 
-	//API urls
+	//The following method provide all API urls for different services
 	public String getAnalyzeURL() {
 		return uriBase + ANALYZE;
 	}

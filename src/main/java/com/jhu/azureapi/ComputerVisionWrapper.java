@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 /**
  * Azure computer vision wrapper.  
- * Provide direct image analyze methods and hiding http post get related work from user
+ * Provide direct image analyze methods and hiding http post/get related work from user
  * 
  * @author James Hu
  *
