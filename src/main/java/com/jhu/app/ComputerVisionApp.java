@@ -126,12 +126,12 @@ public class ComputerVisionApp extends JFrame {
 				.addGroup(analyzePanelLayout.createSequentialGroup().addContainerGap().addGroup(analyzePanelLayout
 						.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(analyzePanelLayout.createSequentialGroup()
 								    .addGroup(analyzePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-										.addComponent(responseScrollPane, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+										.addComponent(responseScrollPane, GroupLayout.PREFERRED_SIZE, 460, GroupLayout.PREFERRED_SIZE)
 										.addComponent(responseLabel))
 								.addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
 								.addGroup(analyzePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 										.addGroup(analyzePanelLayout.createSequentialGroup()
-												.addComponent(sourceImageLabel).addGap(0, 400, Short.MAX_VALUE))
+												.addComponent(sourceImageLabel).addGap(0, 460, Short.MAX_VALUE))
 										        .addComponent(sourceImage, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 										        .addComponent(captionLabel, GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 								.addGroup(analyzePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -143,7 +143,7 @@ public class ComputerVisionApp extends JFrame {
 										.addComponent(imagePromptLabel)
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(imageURLTextField, GroupLayout.PREFERRED_SIZE,
-												240, GroupLayout.PREFERRED_SIZE)
+												350, GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(fileBrowseButton).addComponent(analyzeImageButton))
 								.addGroup(analyzePanelLayout.createSequentialGroup()
@@ -565,7 +565,9 @@ public class ComputerVisionApp extends JFrame {
        	  } else {
        		  bImage = ImageIO.read(new FileInputStream(new File(imageUrl)));
        	  }
-       	  scaleAndShowImage(bImage, sourceImage);
+       	  if (bImage != null) {
+       		  scaleAndShowImage(bImage, sourceImage);
+       	  }
          } catch(IOException e) {
              responseTextArea.setText("Error loading image: " + e.getMessage());
              return;

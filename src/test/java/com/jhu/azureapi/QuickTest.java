@@ -216,10 +216,8 @@ public class QuickTest {
 //			test.testChangeRegion();
 //			test.testTag();
 //			test.testDescribeImage();
-//			test.testGetModles();
-			
-//			test.testGetProperties();
-			
+//			test.testGetModles();		
+//			test.testGetProperties();			
 //			test.testInitConfig();
 			test.testGetRegion();
 			
